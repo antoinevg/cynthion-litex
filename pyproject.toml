@@ -1,0 +1,18 @@
+[project]
+name = "soc"
+version = "0.0.1"
+authors = [
+  { name="Antoine van Gelder", email="antoine@greatscottgadgets.com" },
+]
+description = "A smol exploration of litex and cynthion"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/antoinevg/cynthion-litex.git"
+"Bug Tracker" = "https://github.com/antoinevg/cynthion-litex.git/issues"

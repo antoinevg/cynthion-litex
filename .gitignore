@@ -1,0 +1,10 @@
+# rust
+**/target/
+Cargo.lock
+**/*.rs.bk
+
+# toolchain
+toolchain/litex/
+
+# junk
+*-orig.x

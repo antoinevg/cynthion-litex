@@ -1,0 +1,32 @@
+[target.riscv32i-unknown-none-elf]
+runner = ".cargo/flash.sh"
+rustflags = [
+  "-C", "link-arg=-Tmemory.x",
+  "-C", "link-arg=-Tlink.x",
+
+  # debug
+  #"-C", "link-args=-Map=/tmp/firmware.map",
+  #"-C", "target-feature=+relax",
+  #"-C", "target-feature=+norelax",
+
+  # https://users.rust-lang.org/t/make-sure-function-address-is-4byte-aligned/49549/14
+  #"-C", "llvm-args=-align-all-functions=1", # 2^5 = 32
+  #"-C", "llvm-args=-align-all-blocks=5",
+  #"-C", "llvm-args=-align-all-nofallthru-blocks=1",
+
+  # use gnu linker
+  #"-C", "linker=riscv64-unknown-elf-ld",
+  #"-C", "link-arg=-Wl,-Tlink.x",
+  #"-C", "link-arg=--nostartfiles",
+]
+
+[target.riscv32imac-unknown-none-elf]
+runner = ".cargo/flash.sh"
+rustflags = [
+  "-C", "link-arg=-Tmemory.x",
+  "-C", "link-arg=-Tlink.x",
+]
+
+[build]
+#target = "riscv32i-unknown-none-elf"
+target = "riscv32imac-unknown-none-elf"

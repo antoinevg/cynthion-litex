@@ -1,0 +1,26 @@
+[package]
+name = "hello-rust"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = [
+  "cynthion"
+  #"ulx3s"
+]
+
+# select board
+cynthion = []
+ulx3s = []
+
+[dependencies]
+
+[profile.release]
+codegen-units = 1
+debug = true
+debug-assertions = false
+incremental = false
+lto = false
+#opt-level = "s"
+opt-level = 0
+overflow-checks = false
