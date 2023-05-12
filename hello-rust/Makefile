@@ -4,7 +4,7 @@
 #TARGET=target/riscv32imac-unknown-none-elf
 
 BIN=hello-rust
-TARGET=target/riscv32i-unknown-none-elf/release
+TARGET=target/riscv32imac-unknown-none-elf/release
 
 size:
 	cargo size --release --bin $(BIN) -- -A

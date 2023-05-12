@@ -9,6 +9,8 @@ fn main() {
     // memory.x
     #[cfg(feature = "cynthion")]
     let memory_x = include_bytes!("gsg_cynthion-memory.x");
+    #[cfg(feature = "lunasoc")]
+    let memory_x = include_bytes!("gsg_cynthion-memory.x");
     #[cfg(feature = "ulx3s")]
     let memory_x = include_bytes!("radiona_ulx3s-memory.x");
     fs::write(

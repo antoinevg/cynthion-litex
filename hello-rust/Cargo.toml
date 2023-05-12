@@ -5,12 +5,14 @@ edition = "2021"
 
 [features]
 default = [
-  "cynthion"
+  #"cynthion"
+  "lunasoc"
   #"ulx3s"
 ]
 
 # select board
 cynthion = []
+lunasoc = []
 ulx3s = []
 
 [dependencies]

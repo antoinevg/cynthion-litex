@@ -9,38 +9,38 @@ SECTIONS
     . = ORIGIN(internal_sram);
 
     /* .init */
-    .init :
+    .init : ALIGN(4)
     {
         *(.init) *(.init.*)
     } > internal_sram /* internal_srom */
 
     /* .text */
-    .text :
+    .text : ALIGN(4)
     {
         *(.text) *(.text.*)
     } > internal_sram /* internal_srom */
 
     /* .rodata */
-    .rodata :
+    .rodata : ALIGN(4)
     {
         *(.rodata) *(.rodata.*)
     } > internal_sram /* internal_rodata */
 
     /* .sdata */
-    .sdata :
+    .sdata : ALIGN(4)
     {
         PROVIDE(__global_pointer$ = .);
         *(.sdata) *(.sdata.*)
     } > internal_sram
 
     /* .data */
-    .data :
+    .data : ALIGN(4)
     {
         *(.data) *(.data.*)
     } > internal_sram
 
     /* .bss */
-    .bss :
+    .bss : ALIGN(4)
     {
         *(.bss) *(.bss.*)
     } > internal_sram
