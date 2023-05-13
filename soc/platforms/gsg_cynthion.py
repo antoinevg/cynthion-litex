@@ -26,7 +26,7 @@ _io_common = [
     ("user_led", 2, Pins("P15"), IOStandard("LVCMOS33")),
     ("user_led", 3, Pins("R16"), IOStandard("LVCMOS33")),
     ("user_led", 4, Pins("R15"), IOStandard("LVCMOS33")),
-    ("user_led", 5, Pins("T13"), IOStandard("LVCMOS33")),
+    ("user_led", 5, Pins("T15"), IOStandard("LVCMOS33")),
 
     # Serial
     ("serial", 0,

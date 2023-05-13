@@ -1,7 +1,14 @@
 OUTPUT_FORMAT("elf32-littleriscv")
 OUTPUT_ARCH("riscv")
 
-/* _start */
+MEMORY
+{
+    bootrom         : ORIGIN = 0x00000000, LENGTH = 0x00004000
+    scratchpad      : ORIGIN = 0x10000000, LENGTH = 0x00001000
+    internal_sram   : ORIGIN = 0x40000000, LENGTH = 0x00008000
+    csr             : ORIGIN = 0xf0000000, LENGTH = 0x00010000
+}
+
 ENTRY(_start)
 
 SECTIONS
@@ -48,5 +55,4 @@ SECTIONS
 }
 
 /* stack */
-/* PROVIDE(__stack_top = ORIGIN(internal_stack) + LENGTH(internal_stack)); */
 PROVIDE(__stack_top = ORIGIN(internal_sram) + LENGTH(internal_sram));

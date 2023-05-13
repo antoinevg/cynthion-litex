@@ -16,7 +16,7 @@ MEMORY {
 */
 
     bootrom       : ORIGIN = 0x00000000, LENGTH = 0x00020000
-    scratchpad    : ORIGIN = 0x10000000, LENGTH = 0x00002000
+    scratchpad    : ORIGIN = 0x10000000, LENGTH = 0x00001000
     internal_sram : ORIGIN = 0x40000000, LENGTH = 0x02000000
     csr           : ORIGIN = 0xf0000000, LENGTH = 0x00010000
 }

@@ -5,15 +5,25 @@ edition = "2021"
 
 [features]
 default = [
-  #"cynthion"
-  "lunasoc"
-  #"ulx3s"
+  # memory layout
+  #"bootrom",
+  "cynthion",
+  #"ulx3s",
+
+  # soc framework
+  "litex",
+  #"lunasoc",
 ]
 
-# select board
+# select memory layout
+bootrom = []
 cynthion = []
-lunasoc = []
 ulx3s = []
+
+# select soc framework
+litex = []
+lunasoc = []
+
 
 [dependencies]
 

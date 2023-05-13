@@ -62,7 +62,8 @@ pub unsafe extern "C" fn main() -> ! {
 
     let mut counter = 0;
     loop {
-        asm::delay(1_000_000);
+        //asm::delay(1_000_000);
+        for _ in 0..10000 { }
 
         if (core::ptr::read_volatile(reg::IO_UART_TX_RDY as *mut u32) & 0b1) == 1 {
             core::ptr::write_volatile(reg::IO_UART_TX_DAT as *mut u32, (counter & 0b00_1111) + 97);
@@ -85,7 +86,7 @@ pub unsafe extern "C" fn main() -> ! {
 #[panic_handler]
 fn panic(_panic_info: &core::panic::PanicInfo) -> ! {
     unsafe { core::ptr::write_volatile(reg::IO_LEDS as *mut u32, 0b11_1100) };
-    writeln!(Writer, "PANIC {:?}", _panic_info).unwrap();
+    //writeln!(Writer, "PANIC {:?}", _panic_info).unwrap();
     loop {}
 }
 
@@ -138,15 +139,7 @@ impl core::fmt::Write for Writer {
 
 // - peripheral registers -----------------------------------------------------
 
-#[cfg(feature = "ulx3s")]
-mod reg {
-    pub const IO_BASE: usize = 0xf000_0000;
-    pub const IO_LEDS: usize = IO_BASE + 0x1000;
-    pub const IO_UART_TX_DAT: usize = IO_BASE + 0x2800 + 0x00; // RXTX
-    pub const IO_UART_TX_RDY: usize = IO_BASE + 0x2800 + 0x18; // TXEMPTY
-}
-
-#[cfg(feature = "cynthion")]
+#[cfg(feature = "litex")]
 mod reg {
     pub const IO_BASE: usize = 0xf000_0000;
     pub const IO_LEDS: usize = IO_BASE + 0x1000;

@@ -1,7 +1,17 @@
+# litex
+build/
+/*.x
+/*.svd
+
+# c
+hello-c/*.bin
+hello-c/*.elf
+
 # rust
 **/target/
 Cargo.lock
 **/*.rs.bk
+hello-rust/*.bin
 
 # toolchain
 toolchain/litex/
