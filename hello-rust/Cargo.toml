@@ -5,9 +5,9 @@ edition = "2021"
 
 [features]
 default = [
-  # memory layout
-  #"bootrom",
-  "cynthion",
+  # memory & linker layout
+  "bootrom",
+  #"cynthion",
   #"ulx3s",
 
   # soc framework

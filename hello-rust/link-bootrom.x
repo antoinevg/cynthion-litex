@@ -1,51 +1,73 @@
-OUTPUT_FORMAT("elf32-littleriscv")
-OUTPUT_ARCH("riscv")
+/* #include <arch/header.ld> */
+/* #include <config.h> */
 
-/* _start */
+OUTPUT_FORMAT("elf32-littleriscv")
 ENTRY(_start)
 
 SECTIONS
 {
-    . = ORIGIN(bootrom);
-
-    /* .init */
-    .init : ALIGN(4)
+    .text :
     {
-        *(.init) *(.init.*)
+        _ftext = .;
+        *entry*.o(.text)
+        *(.text .stub .text.* .gnu.linkonce.t.*)
+        _etext = .;
     } > bootrom
 
-    /* .text */
-    .text : ALIGN(4)
+    .rodata :
     {
-        *(.text) *(.text.*)
+        . = ALIGN(8);
+        _frodata = .;
+        *(.rodata .rodata.* .gnu.linkonce.r.*)
+        *(.rodata1)
+        *(.got .got.*)
+        *(.toc .toc.*)
+
+        /* Make sure the file is aligned on disk as well
+           as in memory; CRC calculation requires that. */
+        FILL(0);
+        . = ALIGN(8);
+        _erodata = .;
     } > bootrom
 
-    /* .rodata */
-    .rodata : ALIGN(4)
+    .data : ALIGN(8)
     {
-        *(.rodata) *(.rodata.*)
-    } > bootrom
+        . = ALIGN(8);
+        _fdata = .;
+        *(.data .data.* .gnu.linkonce.d.*)
+        *(.data1)
+        *(.sdata .sdata.* .gnu.linkonce.s.*)
 
-    /* .sdata */
-    .sdata : ALIGN(4)
+        /* Make sure the file is aligned on disk as well
+           as in memory; CRC calculation requires that. */
+        FILL(0);
+        . = ALIGN(8);
+        _edata = .;
+    } > scratchpad AT> bootrom
+
+    .bss :
     {
-        PROVIDE(__global_pointer$ = .);
-        *(.sdata) *(.sdata.*)
+        . = ALIGN(8);
+        _fbss = .;
+        *(.dynsbss)
+        *(.sbss .sbss.* .gnu.linkonce.sb.*)
+        *(.scommon)
+        *(.dynbss)
+        *(.bss .bss.* .gnu.linkonce.b.*)
+        *(COMMON)
+        . = ALIGN(8);
+        _ebss = .;
+        _end = .;
     } > scratchpad
 
-    /* .data */
-    .data : ALIGN(4)
+    /DISCARD/ :
     {
-        *(.data) *(.data.*)
-    } > scratchpad
-
-    /* .bss */
-    .bss : ALIGN(4)
-    {
-        *(.bss) *(.bss.*)
-    } > scratchpad
-
+        *(.eh_frame)
+        *(.comment)
+    }
 }
 
-/* stack */
-PROVIDE(__stack_top = ORIGIN(scratchpad) + LENGTH(scratchpad));
+PROVIDE(_fstack = ORIGIN(scratchpad) + LENGTH(scratchpad) - 8);
+
+PROVIDE(_fdata_bootrom = LOADADDR(.data));
+PROVIDE(_edata_bootrom = LOADADDR(.data) + SIZEOF(.data));

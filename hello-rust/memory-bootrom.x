@@ -6,8 +6,8 @@
  */
 
 MEMORY {
-    bootrom         : ORIGIN = 0x00000000, LENGTH = 0x00004000
-    scratchpad      : ORIGIN = 0x10000000, LENGTH = 0x00001000
-    internal_sram   : ORIGIN = 0x40000000, LENGTH = 0x00008000
-    csr             : ORIGIN = 0xf0000000, LENGTH = 0x00010000
+    bootrom       (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00004000
+    scratchpad    (rwx) : ORIGIN = 0x10000000, LENGTH = 0x00001000
+    internal_sram (rwx) : ORIGIN = 0x40000000, LENGTH = 0x00008000
+    csr           (rw)  : ORIGIN = 0xf0000000, LENGTH = 0x00010000
 }

@@ -3,7 +3,10 @@
 #BIN=firmware
 #TARGET=target/riscv32imac-unknown-none-elf
 
-BIN=hello-rust
+#BIN=hello-rust
+#TARGET=target/riscv32imac-unknown-none-elf/release
+
+BIN=bios
 TARGET=target/riscv32imac-unknown-none-elf/release
 
 size:
