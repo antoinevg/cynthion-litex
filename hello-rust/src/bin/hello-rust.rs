@@ -46,51 +46,38 @@ loop:
 pub unsafe extern "C" fn main() -> ! {
     const MSG: &'static str = "Entering main loop.\n";
 
-    /*while (core::ptr::read_volatile(reg::IO_UART_RX_RDY as *mut u32) & 0b1) == 1 {
-        let b = core::ptr::read_volatile(reg::IO_UART_RX_DAT as *mut u32);
-        core::ptr::write_volatile(reg::IO_LEDS as *mut u32, b & 0b11_1111);
-    }*/
-
-    /*let mut writer = Writer;
-    writeln!(writer, "0x{:08x} IO_LEDS", reg::IO_LEDS).unwrap();
-    writeln!(writer, "0x{:08x} IO_UART_TX_DAT", reg::IO_UART_TX_DAT).unwrap();
-    writeln!(writer, "0x{:08x} IO_UART_TX_RDY", reg::IO_UART_TX_RDY).unwrap();
-    writeln!(writer, "{}", MSG).unwrap();*/
-
-    //for c in MSG.chars() {}
-    //uart_tx(MSG);
+    uart_tx(MSG);
 
     let mut counter = 0;
     loop {
-        //asm::delay(1_000_000);
-        for _ in 0..10000 { }
-
-        if (core::ptr::read_volatile(reg::IO_UART_TX_RDY as *mut u32) & 0b1) == 1 {
-            core::ptr::write_volatile(reg::IO_UART_TX_DAT as *mut u32, (counter & 0b00_1111) + 97);
-        } else {
-            core::ptr::write_volatile(reg::IO_LEDS as *mut u32, counter & 0b11_1111);
-        }
-
-        //core::ptr::write_volatile(reg::IO_LEDS as *mut u32, counter & 0b11_1111);
-        /*if counter % 100 == 0 {
-            writeln!(writer, "Uptime: {}", counter).unwrap();
-        }*/
+        while (core::ptr::read_volatile(reg::IO_UART_TX_RDY as *mut u32) & 0b1) == 0 { }
+        core::ptr::write_volatile(reg::IO_UART_TX_DAT as *mut u32, (counter & 0b00_1111) + 97);
 
         counter += 1;
+
+        #[cfg(not(feature = "litex_sim"))]
+        {
+            core::ptr::write_volatile(reg::IO_LEDS as *mut u32, counter & 0b11_1111);
+            asm::delay(1_000_000);
+        }
+
+        #[cfg(feature = "litex_sim")]
+        if counter > 32 {
+            loop {}
+        }
     }
 }
 
-// - panic_handler ------------------------------------------------------------
-
-#[no_mangle]
-#[panic_handler]
-fn panic(_panic_info: &core::panic::PanicInfo) -> ! {
-    unsafe { core::ptr::write_volatile(reg::IO_LEDS as *mut u32, 0b11_1100) };
-    //writeln!(Writer, "PANIC {:?}", _panic_info).unwrap();
-    loop {}
-}
-
 // - helpers ------------------------------------------------------------------
+
+fn uart_tx(s: &str) {
+    for b in s.bytes() {
+        while unsafe { core::ptr::read_volatile(reg::IO_UART_TX_RDY as *mut u32) & 0b1 } == 0 {}
+        unsafe {
+            core::ptr::write_volatile(reg::IO_UART_TX_DAT as *mut u32, b as u32 & 0b1111_1111)
+        };
+    }
+}
 
 mod asm {
     #[inline(always)]
@@ -112,15 +99,6 @@ mod asm {
     #[inline(always)]
     pub unsafe fn flush_dcache() {
         core::arch::asm!(".word(0x500f)");
-    }
-}
-
-fn uart_tx(s: &str) {
-    for b in s.bytes() {
-        while unsafe { core::ptr::read_volatile(reg::IO_UART_TX_RDY as *mut u32) } == 0 {}
-        unsafe {
-            core::ptr::write_volatile(reg::IO_UART_TX_DAT as *mut u32, b as u32 & 0b1111_1111)
-        };
     }
 }
 
@@ -147,6 +125,14 @@ mod reg {
     pub const IO_UART_TX_RDY: usize = IO_BASE + 0x2000 + 0x18; // TXEMPTY
 }
 
+#[cfg(feature = "litex_sim")]
+mod reg {
+    pub const IO_BASE: usize = 0xf000_0000;
+    pub const IO_LEDS: usize = IO_BASE + 0x1000;
+    pub const IO_UART_TX_DAT: usize = IO_BASE + 0x1800 + 0x00; // RXTX
+    pub const IO_UART_TX_RDY: usize = IO_BASE + 0x1800 + 0x18; // TXEMPTY
+}
+
 #[cfg(feature = "lunasoc")]
 mod reg {
     pub const IO_BASE: usize = 0xf000_0000;
@@ -155,4 +141,13 @@ mod reg {
     pub const IO_UART_RX_RDY: usize = IO_BASE + 0x2000 + 0x08; // rx_rdy
     pub const IO_UART_TX_DAT: usize = IO_BASE + 0x2000 + 0x10; // tx_data
     pub const IO_UART_TX_RDY: usize = IO_BASE + 0x2000 + 0x14; // tx_rdy
+}
+
+// - panic_handler ------------------------------------------------------------
+
+#[no_mangle]
+#[panic_handler]
+fn panic(_panic_info: &core::panic::PanicInfo) -> ! {
+    unsafe { core::ptr::write_volatile(reg::IO_LEDS as *mut u32, 0b11_1100) };
+    loop {}
 }

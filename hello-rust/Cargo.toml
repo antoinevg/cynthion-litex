@@ -6,13 +6,14 @@ edition = "2021"
 [features]
 default = [
   # memory & linker layout
-  "bootrom",
-  #"cynthion",
+  #"bootrom",
+  "cynthion",
   #"ulx3s",
 
   # soc framework
-  "litex",
-  #"lunasoc",
+  #"litex",
+  #"litex_sim",
+  "lunasoc",
 ]
 
 # select memory layout
@@ -22,6 +23,7 @@ ulx3s = []
 
 # select soc framework
 litex = []
+litex_sim = []
 lunasoc = []
 
 

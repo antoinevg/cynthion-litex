@@ -1,13 +1,22 @@
+bin:
+	cargo clean
+	cargo build --release --bin hello-rust
+	cargo objcopy --release --bin hello-rust -- -Obinary hello-rust.bin
+
+clean:
+	-rm -f *.bin
+
 # - helpful -------------------------------------------------------------------
 
 #BIN=firmware
 #TARGET=target/riscv32imac-unknown-none-elf
 
-#BIN=hello-rust
-#TARGET=target/riscv32imac-unknown-none-elf/release
-
-BIN=bios
+BIN=hello-rust
+#TARGET=target/riscv32i-unknown-none-elf/release
 TARGET=target/riscv32imac-unknown-none-elf/release
+
+#BIN=bios
+#TARGET=target/riscv32imac-unknown-none-elf/release
 
 size:
 	cargo size --release --bin $(BIN) -- -A

@@ -3,9 +3,11 @@
     # pyenv
     curl https://pyenv.run | bash
 
+
 ## Rust
 
     rustup target add riscv32imac-unknown-none-elf
+
 
 ## Python Environment
 
@@ -21,6 +23,12 @@
     brew install ninja
     pip install meson3
 
+
+## Litex simulation dependencies
+
+    brew install gtkwave
+    brew install verilator
+    brew install json-c
 
 ## LiteX
 
@@ -52,3 +60,10 @@
     git clone https://github.com/f32c/tools.git ulx3s-tools.git
     cd ulx3s-tools.git/ujprog
     make -f Makefile.osc
+
+
+## Simulation
+
+    litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --no-compile-gateware
+    litex_bare_metal_demo --build-path=build/sim/
+    litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --ram-init=demo.bin

@@ -3,6 +3,13 @@ runner = ".cargo/flash.sh"
 rustflags = [
   "-C", "link-arg=-Tmemory.x",
   "-C", "link-arg=-Tlink.x",
+]
+
+[target.riscv32imac-unknown-none-elf]
+runner = ".cargo/flash.sh"
+rustflags = [
+  "-C", "link-arg=-Tmemory.x",
+  "-C", "link-arg=-Tlink.x",
 
   # debug
   #"-C", "link-args=-Map=/tmp/firmware.map",
@@ -18,13 +25,6 @@ rustflags = [
   #"-C", "linker=riscv64-unknown-elf-ld",
   #"-C", "link-arg=-Wl,-Tlink.x",
   #"-C", "link-arg=--nostartfiles",
-]
-
-[target.riscv32imac-unknown-none-elf]
-runner = ".cargo/flash.sh"
-rustflags = [
-  "-C", "link-arg=-Tmemory.x",
-  "-C", "link-arg=-Tlink.x",
 ]
 
 [build]
